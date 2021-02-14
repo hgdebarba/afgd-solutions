@@ -71,8 +71,8 @@ namespace AfGD.Execise3
             var vec = property.vector3Value;
 
             // Display sliders for the x and z components.
-            vec.x = EditorGUILayout.Slider(new GUIContent("x"), vec.x, -1f, 10f);
-            vec.z = EditorGUILayout.Slider(new GUIContent("z"), vec.z, -1f, 10f);
+            vec.x = EditorGUILayout.Slider(new GUIContent("x"), vec.x, -1f, 15f);
+            vec.z = EditorGUILayout.Slider(new GUIContent("z"), vec.z, -1f, 15f);
 
             // Write the result back to the serialized property.
             property.vector3Value = vec;
