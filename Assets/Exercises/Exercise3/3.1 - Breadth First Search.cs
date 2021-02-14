@@ -8,7 +8,7 @@ namespace AfGD.Execise3
         // Exercise 3.1 - Implement Breadth first search. 
         // Explore the graph and fill the _cameFrom_ dictionairy with data using breadth first search.
         // PathFinding.ReconstructPath() will use the data in cameFrom to reconstruct 
-        //  a path between the start node and end node. 
+        // a path between the start node and end node. 
         //
         // Notes:      
         //  To get the neighbours (connected nodes) of a specific node use:

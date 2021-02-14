@@ -37,7 +37,7 @@ namespace AfGD.Execise3
 
                 // If the distance between the point and this node
                 // is smaller than the smallest distance encountered
-                //  thus far we keep this node. 
+                // thus far we keep this node. 
                 if (pointToNode.sqrMagnitude < minSqrDist)
                 {
                     closestNode = node;

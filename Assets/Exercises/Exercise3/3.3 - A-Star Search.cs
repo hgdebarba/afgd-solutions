@@ -12,6 +12,7 @@ namespace AfGD.Execise3
         //
         // Notes:
         //      Use the data structures used in Exercise 3.1 and 3.2
+        //
         public static void Execute(Graph graph, Node startPoint, Node endPoint, Dictionary<Node, Node> cameFrom)
         {
             var frontier = new PriorityQueue<Node>();

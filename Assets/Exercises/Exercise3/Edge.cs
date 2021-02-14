@@ -7,8 +7,13 @@ namespace AfGD.Execise3
     [Serializable]
     public struct Edge
     {
+        // Index into the Node array of the graph.
         public int From;
+
+        // Index into the Node array of the graph.
         public int To;
+
+        // The cost associated with this Edge.
         public float Cost;
 
         // Returns whether this Edge 

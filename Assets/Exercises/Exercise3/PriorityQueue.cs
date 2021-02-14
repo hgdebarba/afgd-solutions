@@ -9,6 +9,7 @@ namespace AfGD.Execise3
     // To create the same API interface as Queue<T> in Systems.Collections
     public class PriorityQueue<T>
     {
+        // The number of elements in our Queue
         public int Count => m_Queue.Count;
 
         PriorityQueueImpl<PrioritizedElement> m_Queue;
@@ -18,11 +19,13 @@ namespace AfGD.Execise3
             m_Queue = new PriorityQueueImpl<PrioritizedElement>(256, new ElementComparer());
         }
 
+        // Adds a new entry (@value) to our PrioriryQueue with a priority (@priority)
         public void Enqueue(T value, float priority)
         {
             m_Queue.Push(new PrioritizedElement() { Value = value, Priority = priority });
         }
 
+        // Takes the next entry of the Queue with the *lowest* priority value
         public T Dequeue()
         {
             var top = m_Queue.Top.Value;

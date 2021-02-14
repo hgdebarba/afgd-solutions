@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.Assertions;
 
 namespace AfGD.Execise3
 {
@@ -77,18 +78,33 @@ namespace AfGD.Execise3
             ReconstructPath(cameFrom, start, goal, m_Path);
         }
 
-        // This function reconstructs a path using the result 
+        // This function reconstructs a path from StartPoint to EndPoint
+        // using the cameFrom dictionairy. The cameFrom dictionairy should
+        // be filled with the optimal path to go from a node to another. 
         static void ReconstructPath(Dictionary<Node, Node> cameFrom, Node startPoint, Node endPoint, List<Vector3> path)
         {
+            // Start at our goal
             var current = endPoint;
 
+            // Keep backtracking until we have found the start
             while (current != startPoint)
             {
+                // Add the current node to our path.
                 path.Add(current.Position);
+
+                // Validate that we know how we got to the current Node
+                Assert.IsTrue(cameFrom.ContainsKey(current));
+
+                // Backtrack to the Node we used to get to the 
+                // current node.
                 current = cameFrom[current];
             }
 
+            // Add the start point to the path
             path.Add(startPoint.Position);
+
+            // Flip the List so that the first element 
+            // is start and the last element is the goal
             path.Reverse();
         }
 
