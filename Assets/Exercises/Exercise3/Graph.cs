@@ -210,8 +210,10 @@ namespace AfGD.Execise3
                 // Draw a line from start node to destination node.
                 Debug.DrawLine(fromPos + .3f * fromToDir, toPos - .3f * fromToDir);
 
+                var offset = Vector3.Cross(fromToDir, Vector3.up);
+
                 // Draw the cost of the connection in the middle between start and destination.
-                Handles.Label(0.5f * (fromPos + toPos), new GUIContent(edge.Cost.ToString()));
+                Handles.Label(0.5f * (fromPos + toPos) + offset * .1f, new GUIContent(edge.Cost.ToString()));
             }
         }
 
