@@ -15,7 +15,7 @@ namespace AfGD
 
 
         // these variables are only used for visualization
-        [Header("Debug varaibles")]
+        [Header("Debug variables")]
         [Range(2, 100)]
         public int debugSegments = 20;
         public bool drawPath = true;
