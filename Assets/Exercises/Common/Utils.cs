@@ -154,12 +154,12 @@ namespace AfGD
             p2 = trParent.MultiplyPoint3x4(p2 * scale);
             p3 = trParent.MultiplyPoint3x4(p3 * scale);
             p4 = trParent.MultiplyPoint3x4(p4 * scale);
-            vec *= 0.1f;
 
             Debug.DrawLine(posP, p1, Color.cyan);
             Debug.DrawLine(posP, p2, Color.cyan);
             Debug.DrawLine(posP, p3, Color.cyan);
             Debug.DrawLine(posP, p4, Color.cyan);
+
             Debug.DrawLine(posPlocal, p1, Color.cyan);
             Debug.DrawLine(posPlocal, p2, Color.cyan);
             Debug.DrawLine(posPlocal, p3, Color.cyan);

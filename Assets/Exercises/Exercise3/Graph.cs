@@ -217,6 +217,18 @@ namespace AfGD.Execise3
             }
         }
 
+        public void SetDistanceAsCost()
+        {
+            for (int i = 0; i < m_Edges.Length; i++)
+            {
+                Vector3 diff = m_Nodes[m_Edges[i].From].Position - m_Nodes[m_Edges[i].To].Position;
+                // manhattan distance
+                //m_Edges[i].Cost = Mathf.Abs(diff.x) + Mathf.Abs(diff.y);
+                // euclidian distasnce
+                m_Edges[i].Cost = Mathf.Round(diff.magnitude*1000f)/1000f;                    
+            }
+        }
+
         // Clears the explored nodes list 
         public void Clear()
         {
