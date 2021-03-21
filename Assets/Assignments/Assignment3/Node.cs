@@ -1,3 +1,7 @@
+#define SOLUTION_3_1
+#define SOLUTION_3_2
+#define SOLUTION_3_3
+
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -42,6 +46,7 @@ namespace AfGD.Assignment3
             m_Color = Color.HSVToRGB(Random.value, 0.8f, 1f);
         }
 
+#if SOLUTION_3_1
         // Returns a boolean whether a cell is considered valid
         // Valid cells may have constraints on values
         // This may include but is not limited to volume and/or ratio
@@ -57,12 +62,15 @@ namespace AfGD.Assignment3
 
             return true;
         }
+#endif
 
         public void SplitCellRecursively()
         {
+#if SOLUTION_3_1
             // Do not attempt to split an invalid cell
             if (!IsValidCell())
                 return;
+#endif
 
             // Split this cell if it is valid and does not have children
             if (m_ChildA == null && m_ChildA == null)
@@ -75,8 +83,14 @@ namespace AfGD.Assignment3
 
         // Splits a cell into two smaller cells along a random axis
         // Only if the newly formed cells are both valid
+        // Assignment 3.1 - Attempt to split this cell into two partitions
+        // 1) split this cell along a random axis.
+        // 2) check if the newly created partions are valid paritions
+        // 3) only if both partions are valid assign them as new child nodes
+        //    of this node (m_ChildA & m_ChildB)
         void SplitCell()
         {
+#if SOLUTION_3_1
             // Randomly choose an axis to split on
             int axis = (Random.value > 0.5f) ? 0 : 2;
 
@@ -113,6 +127,10 @@ namespace AfGD.Assignment3
                 m_ChildA = cellA;
                 m_ChildB = cellB;
             }
+#endif
+            // Only if we split into two valid cells:
+            // m_ChildA = ...;
+            // m_ChildB = ...;
         }
 
         public void GenerateRoomsRecursively()
@@ -124,10 +142,17 @@ namespace AfGD.Assignment3
                 GenerateRoom();
         }
 
-        // Randomly generates a room within the bounds of this cell.
-        // Also creates a mesh to represent this room.
+        // Randomly generates a room within the bounds of this partition.
+        // This function is only called on leaf nodes.
+        // Assignment 3.2 - Generate a room in leaf nodes
+        // 1) Create a room within the volume of his partion (m_Cell)
+        // 2) Add any needed constraints to ensure decent looking rooms.
+        //      tip: make a room occupy at least half of the x and z axis of the parition. 
+        //           this will make things easier in assignment 3.3
+        // 3) Assign the volume of the room to m_Room.
         void GenerateRoom()
         {
+#if SOLUTION_3_2
             // Randomly generate bounds for the room
             var size = m_Cell.size;
 
@@ -147,6 +172,8 @@ namespace AfGD.Assignment3
             max += m_Cell.min;
 
             m_Room = new Bounds { min = min, max = max };
+#endif
+            // m_Room = ... (todo)
 
             // Spawn Mesh that represents room
             var room = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -154,38 +181,6 @@ namespace AfGD.Assignment3
             room.transform.localScale = m_Room.size;
             room.GetComponent<MeshRenderer>().material.color = m_Color;
             room.name = "Room";
-        }
-
-        public void UpdateRoomBoundsRecursively()
-        {
-            // Visit children first and update their bounds.
-            m_ChildA?.UpdateRoomBoundsRecursively();
-            m_ChildB?.UpdateRoomBoundsRecursively();
-
-            // Only our bounds after our children.
-            UpdateRoomBounds();
-        }
-
-        // Encapsulates the room bounds of the child nodes.
-        // If this node is a leaf node the room bounds contain the room exactly.
-        // Otherwise it is an AABB around all the nodes in descenting children.
-        void UpdateRoomBounds()
-        {
-            if (m_ChildA != null)
-            {
-                if (m_Room.Equals(new Bounds()))
-                    m_Room = m_ChildA.Room;
-                else
-                    m_Room.Encapsulate(m_ChildA.Room);
-            }
-
-            if (m_ChildB != null)
-            {
-                if (m_Room.Equals(new Bounds()))
-                    m_Room = m_ChildB.Room;
-                else
-                    m_Room.Encapsulate(m_ChildB.Room);
-            }
         }
 
         // Recursively create pathways between segments of our dungeon.
@@ -211,11 +206,35 @@ namespace AfGD.Assignment3
                 return true;
 
             ConnectChildRooms();
+            IsConnected = true;
             return true;
         }
 
+        // ! This function is called over multiple frames in case you want to make use of Physics.Raycast().
+        // !                (You cannot raycast against newly instantiated objects immediately)
+        // ! The function will ensure that it is safe to raycast against the rooms & corridors of the child nodes.
+        // 
+        // Assignment 3.3 - Create hallways between rooms
+        // 1) Starting from the lowest layers, connect rooms corresponding to children of the same parent
+        //    - If the rooms occupy at least half of both axis inside a partion you should only ever require straight corridors
+        //      In other words, there will always be a section of the RoomBounds that can be connected by a straight line.
+        //    - Once rooms are connected by a hallway we can connect to that hallways too. 
+        //      Therefore the first condition applies for higher levels too!
+        //    - Consider using Physics.RayCast or Physics.BoxCast to cast into a RoomBound to find the actual room or hallway it should connect to.
+        //    - Spawn a cube (similar to what is done for rooms) once you have found the dimensions and location of the hallway.
+        //      Otherwise you do not have anything to raycast against.
         void ConnectChildRooms()
         {
+            // Connect m_ChildA & m_ChildB
+
+            // 1) Find interval where the RoomBounds of the children overlap on the axis perpendicular to the split axis of *this* node
+            // 2) Sanity check if this range exists (should be the case if a room is always at least half the size)
+            // 3) Pick a point on this interval where the corridor will be placed (this is only 1 axis)
+            // 4) Find a coordinate on the split axis that is inbetween the RoomBounds of both children
+            // 5) RayCast from the found coordinates along the split axis in both directions 
+            //    (this should give you the coordinates where the hallways connect to the room)
+            // 6) Create a Cube that represents the hallway
+#if SOLUTION_3_3
             var leftAABB = m_ChildA.Room;
             var rightAABB = m_ChildB.Room;
 
@@ -271,8 +290,39 @@ namespace AfGD.Assignment3
                 room.transform.localScale = scale;// new Vector3(dir.x, 1f, dir.z) + (axis == 0 ? Vector3.forward : Vector3.right);
                 room.name = "hallway";
             }
+#endif
+        }
 
-            IsConnected = true;
+        public void UpdateRoomBoundsRecursively()
+        {
+            // Visit children first and update their bounds.
+            m_ChildA?.UpdateRoomBoundsRecursively();
+            m_ChildB?.UpdateRoomBoundsRecursively();
+
+            // Only our bounds after our children.
+            UpdateRoomBounds();
+        }
+
+        // Encapsulates the room bounds of the child nodes.
+        // If this node is a leaf node the room bounds contain the room exactly.
+        // Otherwise it is an AABB around all the nodes in descenting children.
+        void UpdateRoomBounds()
+        {
+            if (m_ChildA != null)
+            {
+                if (m_Room.Equals(new Bounds()))
+                    m_Room = m_ChildA.Room;
+                else
+                    m_Room.Encapsulate(m_ChildA.Room);
+            }
+
+            if (m_ChildB != null)
+            {
+                if (m_Room.Equals(new Bounds()))
+                    m_Room = m_ChildB.Room;
+                else
+                    m_Room.Encapsulate(m_ChildB.Room);
+            }
         }
 
         public void DebugDraw(DrawMode drawMode)

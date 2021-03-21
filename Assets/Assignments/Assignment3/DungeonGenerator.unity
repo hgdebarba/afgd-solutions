@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee47947bb3e22694f97b1e97f312dec6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_DrawMode: 0
-  m_DrawLevel: 0
+  m_DrawMode: 1
+  m_DrawLevel: -1
   m_Bounds:
     m_Center: {x: 0, y: 0, z: 0}
     m_Extent: {x: 40, y: 2, z: 40}
