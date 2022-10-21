@@ -52,12 +52,12 @@ namespace AfGD.Assignment3
         // This may include but is not limited to volume and/or ratio
         bool IsValidCell()
         {
-            var volume = m_Cell.size.x * m_Cell.size.y * m_Cell.size.z;
-            if (volume < 20f * 2f * 20f)
+            float volume = m_Cell.size.x * m_Cell.size.y * m_Cell.size.z;
+            if (volume < 20f * 2f * 20f) // you can play with these parameters
                 return false;
 
-            var ratio = Mathf.Abs(m_Cell.size.x / m_Cell.size.z);
-            if (ratio > 5f || ratio < .2f)
+            float ratio = Mathf.Abs(m_Cell.size.x / m_Cell.size.z);
+            if (ratio > 5f || ratio < .2f) // you can play with these parameters
                 return false;
 
             return true;
@@ -92,7 +92,7 @@ namespace AfGD.Assignment3
         {
 #if SOLUTION_3_1
             // Randomly choose an axis to split on
-            int axis = (Random.value > 0.5f) ? 0 : 2;
+            int axis = (Random.value > 0.5f) ? 0 : 2; // 0 is x, 2 is z
 
             // Partition the Cell into two cells; cellA & cellB.
             var min = m_Cell.min;
@@ -120,6 +120,8 @@ namespace AfGD.Assignment3
                 });
 
             // Only if we can split into two valid cells do we actually proceed with the split
+            // m_ChildA = ...;
+            // m_ChildB = ...;
             if (cellB.IsValidCell() && cellA.IsValidCell())
             {
                 m_SplitAxis = (Axis)axis;
@@ -128,9 +130,7 @@ namespace AfGD.Assignment3
                 m_ChildB = cellB;
             }
 #endif
-            // Only if we split into two valid cells:
-            // m_ChildA = ...;
-            // m_ChildB = ...;
+
         }
 
         public void GenerateRoomsRecursively()
@@ -145,7 +145,7 @@ namespace AfGD.Assignment3
         // Randomly generates a room within the bounds of this partition.
         // This function is only called on leaf nodes.
         // Assignment 3.2 - Generate a room in leaf nodes
-        // 1) Create a room within the volume of his partion (m_Cell)
+        // 1) Create a room within the volume of its partion (m_Cell)
         // 2) Add any needed constraints to ensure decent looking rooms.
         //      tip: make a room occupy at least half of the x and z axis of the parition. 
         //           this will make things easier in assignment 3.3
@@ -172,11 +172,13 @@ namespace AfGD.Assignment3
             max += m_Cell.min;
 
             m_Room = new Bounds { min = min, max = max };
-#endif
+
             // m_Room = ... (todo)
 
+#endif
+
             // Spawn Mesh that represents room
-            var room = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            GameObject room = GameObject.CreatePrimitive(PrimitiveType.Cube);
             room.transform.position = m_Room.center;
             room.transform.localScale = m_Room.size;
             room.GetComponent<MeshRenderer>().material.color = m_Color;
@@ -192,7 +194,7 @@ namespace AfGD.Assignment3
             if (IsConnected || IsLeafNode)
                 return false;
 
-            var childUpdated = false;
+            bool childUpdated = false;
 
             // Update Children first
             if (m_ChildA != null)
@@ -233,7 +235,7 @@ namespace AfGD.Assignment3
             // 4) Find a coordinate on the split axis that is inbetween the RoomBounds of both children
             // 5) RayCast from the found coordinates along the split axis in both directions 
             //    (this should give you the coordinates where the hallways connect to the room)
-            // 6) Create a Cube that represents the hallway
+            // 6) Create a Cube that represents the hallway (i.e. GameObject.CreatePrimitive(PrimitiveType.Cube);)
 #if SOLUTION_3_3
             var leftAABB = m_ChildA.Room;
             var rightAABB = m_ChildB.Room;
@@ -327,18 +329,18 @@ namespace AfGD.Assignment3
 
         public void DebugDraw(DrawMode drawMode)
         {
-            var color = Handles.color;
+            Color color = Handles.color;
             Handles.color = m_Color;
 
             // Select bounds based on drawing mode
-            var AABB = drawMode == DrawMode.Rooms ? m_Room : m_Cell;
-            var min = AABB.min;
-            var max = AABB.max;
+            Bounds AABB = drawMode == DrawMode.Rooms ? m_Room : m_Cell;
+            Vector3 min = AABB.min;
+            Vector3 max = AABB.max;
             max.y = min.y;
 
             // Draw a cross at the bottom of the volume
             Handles.DrawLine(min, max);
-            var x = min.x; min.x = max.x; max.x = x;
+            float x = min.x; min.x = max.x; max.x = x;
             Handles.DrawLine(min, max);
 
             // Draw the volume

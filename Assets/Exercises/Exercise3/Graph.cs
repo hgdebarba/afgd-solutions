@@ -21,7 +21,7 @@ namespace AfGD.Execise3
 
         // A list to keep track of explored nodes for debug 
         // purposes. This list is cleared every execution.
-        readonly List<Node> m_ExploredNodes = new List<Node>();
+        public readonly List<Node> m_ExploredNodes = new List<Node>();
 
         // Returns the closest node to a point
         public Node GetClosestNodeToPoint(Vector3 point)
@@ -122,8 +122,8 @@ namespace AfGD.Execise3
                         neighours.Add(neighour);
 
                     // Add the neighbour to the encountered nodes
-                    if (!m_ExploredNodes.Contains(neighour))
-                        m_ExploredNodes.Add(neighour);
+                    //if (!m_ExploredNodes.Contains(neighour))
+                    //    m_ExploredNodes.Add(neighour);
                 }
             }
         }

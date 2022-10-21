@@ -15,6 +15,7 @@ namespace AfGD.Execise3
         //
         public static void Execute(Graph graph, Node startPoint, Node endPoint, Dictionary<Node, Node> cameFrom)
         {
+            graph.m_ExploredNodes.Clear();
             var frontier = new PriorityQueue<Node>();
             frontier.Enqueue(startPoint, 0f);
 
@@ -42,6 +43,7 @@ namespace AfGD.Execise3
                         costSoFar[next] = newCost;
                         var priority = newCost + Heuristic(endPoint, next);
                         frontier.Enqueue(next, priority);
+                        graph.m_ExploredNodes.Add(next);
                         cameFrom[next] = current;
                     }
                 }
